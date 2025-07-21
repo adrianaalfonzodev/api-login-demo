@@ -1,23 +1,41 @@
-import { loginStart, loginSuccess } from '@/lib/features/auth/authSlice'
+'use client'
+
+import {
+  loginStart,
+  loginSuccess,
+  loginFailure
+} from '@/lib/features/auth/authSlice'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useRouter } from 'next/navigation'
 import AppInput from '../ui/AppInput'
 import Image from 'next/image'
+import { toast } from 'sonner'
+import { loginUser } from '@/lib/features/auth/auth'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     dispatch(loginStart())
+
     try {
-      // Simula login exitoso con usuario fijo
-      const fakeUser = { id: 1, name: 'Adriana' }
-      await new Promise((r) => setTimeout(r, 1000))
-      dispatch(loginSuccess(fakeUser))
-    } catch {
-      // dispatch(loginFailure('Error al iniciar sesión')) si tienes esa acción
+      const user = await loginUser(email, password)
+      dispatch(loginSuccess(user))
+      router.push('/dashboard')
+      toast.success('Inicio de sesión exitoso')
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message)
+        dispatch(loginFailure(err.message))
+      } else {
+        toast.error('Error desconocido')
+        dispatch(loginFailure('Error desconocido'))
+      }
     }
   }
 
@@ -77,7 +95,7 @@ const LoginForm = () => {
       <p className="text-center text-sm mt-6">
         ¿No tienes cuenta?{' '}
         <a
-          href="#"
+          href="/register"
           className="text-[#E89B4C]"
         >
           Crear una cuenta
