@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
@@ -8,19 +8,51 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  background: #f5f7f9;
+  border-radius: 0.8rem;
+  font-size: 14px;
+}
+
+.input input:focus {
+  outline: none;
+}
+
+.button,
+.social-button {
+  padding: 0.9rem 1rem;
+  border-radius: 0.9rem;
+  cursor: pointer;
+}
+
+.button {
+  color: white;
+  border: none;
+  background: #182537;
+}
+
+.social-button {
+  display: flex;
+  gap: 0.8rem;
+  color: #182537;
+  border: 1px solid #182537;
+  background: transparent;
+}
+
+.blurred-background {
+  backdrop-filter: blur(10px);
+  background: rgba(147, 147, 147, 0.05);
+  border-radius: 0.9rem;
+  max-width: 60%;
+  margin: 0 auto;
 }
