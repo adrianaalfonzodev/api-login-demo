@@ -1,6 +1,8 @@
 'use client'
 
+import { useAuthCheck } from '@/hooks/useAuthCheck'
 import Image from 'next/image'
+import { PuffLoader } from 'react-spinners'
 
 type AuthLayoutProps = {
   children: React.ReactNode
@@ -8,11 +10,25 @@ type AuthLayoutProps = {
   subtitle: string
 }
 
+function Spinner() {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <PuffLoader
+        color="#3b82f6"
+        size={80}
+      />
+    </div>
+  )
+}
+
 export default function AuthLayout({
   children,
   title,
   subtitle
 }: AuthLayoutProps) {
+  const { checkingAuth } = useAuthCheck({ redirectIfAuthenticated: true })
+  if (checkingAuth) return <Spinner />
+
   return (
     <div className="flex h-screen">
       <div className="flex flex-col h-screen w-screen flex-1 p-6 overflow-hidden">
