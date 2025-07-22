@@ -10,12 +10,15 @@ import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { loginUser } from '@/lib/features/auth/auth'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/lib/store'
 import AppInput from '../ui/Input'
 import Image from 'next/image'
 import Link from 'next/link'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
+  const loading = useSelector((state: RootState) => state.auth.loading)
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -27,7 +30,7 @@ const LoginForm = () => {
     try {
       const user = await loginUser(email, password)
       dispatch(authSuccess(user))
-      router.push('/dashboard')
+      router.push('/dashboard/home')
       toast.success('Inicio de sesión exitoso')
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -38,6 +41,12 @@ const LoginForm = () => {
         dispatch(authFailure('Error desconocido'))
       }
     }
+  }
+
+  const handleGoogleLogin = () => {
+    toast.info(
+      'Funcionalidad de inicio de sesión con Google aún no implementada'
+    )
   }
 
   return (
@@ -71,7 +80,10 @@ const LoginForm = () => {
 
         <button
           type="submit"
-          className="button"
+          className={`button transition-opacity duration-200 ${
+            loading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+          disabled={loading}
         >
           Iniciar sesión
         </button>
@@ -82,7 +94,10 @@ const LoginForm = () => {
         <hr className="flex-grow-1 text-gray-300" />
       </div>
 
-      <button className="social-button relative w-full">
+      <button
+        className="social-button relative w-full"
+        onClick={handleGoogleLogin}
+      >
         <div className="w-6 h-6 absolute">
           <Image
             src="/icons/Google_Favicon_2025.png"

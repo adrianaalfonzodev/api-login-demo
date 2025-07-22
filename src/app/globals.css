@@ -48,6 +48,9 @@ body {
   border: 1px solid #182537;
   background: transparent;
 }
+.social-button:active{
+  background: #9b9b9b;
+}
 
 .blurred-background {
   backdrop-filter: blur(10px);

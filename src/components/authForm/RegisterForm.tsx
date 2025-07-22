@@ -6,16 +6,19 @@ import {
 } from '@/lib/features/auth/authSlice'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import AppInput from '../ui/Input'
-import Image from 'next/image'
 import { toast } from 'sonner'
 import { registerUser } from '@/lib/features/auth/auth'
+import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/lib/store'
+import AppInput from '../ui/Input'
+import Image from 'next/image'
 import Link from 'next/link'
 import AppCheckbox from '../ui/CheckBox'
-import { useDispatch } from 'react-redux'
 
 const RegisterForm = () => {
   const dispatch = useDispatch()
+  const loading = useSelector((state: RootState) => state.auth.loading)
   const router = useRouter()
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -30,13 +33,17 @@ const RegisterForm = () => {
       const user = await registerUser(email, password, name, phone)
       dispatch(authSuccess(user))
       toast.success('Registro exitoso')
-      router.push('/dashboard')
+      router.push('/dashboard/home')
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message)
         dispatch(authFailure(err.message))
       }
     }
+  }
+
+  const handleGoogleRegister = () => {
+    toast.info('Funcionalidad de registro con Google aún no implementada')
   }
 
   return (
@@ -84,7 +91,10 @@ const RegisterForm = () => {
 
         <button
           type="submit"
-          className="button"
+          className={`button transition-opacity duration-200 ${
+            loading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+          disabled={loading}
         >
           Registrarse
         </button>
@@ -95,7 +105,10 @@ const RegisterForm = () => {
         <hr className="flex-grow-1 text-gray-300" />
       </div>
 
-      <button className="social-button relative w-full">
+      <button
+        className="social-button relative w-full"
+        onClick={handleGoogleRegister}
+      >
         <div className="w-6 h-6 absolute">
           <Image
             src="/icons/Google_Favicon_2025.png"

@@ -1,10 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
+import type { User } from '@supabase/supabase-js'
 
-const initialState = {
+const initialState: {
+  user: User | null
+  isLoggedIn: boolean
+  loading: boolean
+  error: string | null
+} = {
   user: null,
   isLoggedIn: false,
   loading: false,
-  error: null
+  error: null,
 }
 
 const authSlice = createSlice({

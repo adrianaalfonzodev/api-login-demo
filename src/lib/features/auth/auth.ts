@@ -58,3 +58,10 @@ function mapSupabaseRegisterError(message: string): string {
 
   return 'Ocurrió un error al crear la cuenta'
 }
+
+export async function logoutUser() {
+  const { error } = await supabase.auth.signOut()
+  if (error) {
+    throw new Error('Error al cerrar sesión')
+  }
+}
