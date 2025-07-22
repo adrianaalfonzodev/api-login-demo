@@ -101,7 +101,7 @@ const RegisterForm = () => {
       </form>
       <div className="flex items-center my-2">
         <hr className="flex-grow-1 text-gray-300" />
-        <span className="mx-2 text-2 text-muted">O</span>
+        <span className="mx-2 text-2 text-muted">Ó</span>
         <hr className="flex-grow-1 text-gray-300" />
       </div>
 

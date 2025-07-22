@@ -25,21 +25,17 @@ export function useAuthCheck(options?: { redirectIfAuthenticated?: boolean }) {
         dispatch(authSuccess(data.user))
         setCheckingAuth(false)
 
-        console.log('User logged in, pathname:', pathname)
         if (
           redirectIfAuthenticated &&
           (pathname === '/login' || pathname === '/register')
         ) {
-          console.log('Redirecting to /dashboard because already logged in')
           router.push('/dashboard/home')
         }
       } else {
         dispatch(logout())
         setCheckingAuth(false)
 
-        console.log('User NOT logged in, pathname:', pathname)
         if (!redirectIfAuthenticated && pathname.startsWith('/dashboard')) {
-          console.log('Redirecting to /login because not logged in')
           router.push('/login')
         }
       }
