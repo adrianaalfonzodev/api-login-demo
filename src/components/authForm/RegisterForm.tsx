@@ -1,50 +1,64 @@
 'use client'
-
 import {
-  loginStart,
-  loginSuccess,
-  loginFailure
+  authStart,
+  authSuccess,
+  authFailure
 } from '@/lib/features/auth/authSlice'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
-import AppInput from '../ui/AppInput'
+import AppInput from '../ui/Input'
 import Image from 'next/image'
 import { toast } from 'sonner'
-import { loginUser } from '@/lib/features/auth/auth'
+import { registerUser } from '@/lib/features/auth/auth'
+import Link from 'next/link'
+import AppCheckbox from '../ui/CheckBox'
+import { useDispatch } from 'react-redux'
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const dispatch = useDispatch()
   const router = useRouter()
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [termsAccepted, setTermsAccepted] = useState(false)
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    dispatch(authStart())
     e.preventDefault()
-    dispatch(loginStart())
-
     try {
-      const user = await loginUser(email, password)
-      dispatch(loginSuccess(user))
+      const user = await registerUser(email, password, name, phone)
+      dispatch(authSuccess(user))
+      toast.success('Registro exitoso')
       router.push('/dashboard')
-      toast.success('Inicio de sesión exitoso')
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message)
-        dispatch(loginFailure(err.message))
-      } else {
-        toast.error('Error desconocido')
-        dispatch(loginFailure('Error desconocido'))
+        dispatch(authFailure(err.message))
       }
     }
   }
 
   return (
-    <div className="flex flex-col gap-4 sm:p-4 relative sm:w-[540px] w-full">
+    <div className="flex flex-col gap-4 md:p-4 relative lg:w-[540px] w-full">
       <form
-        onSubmit={handleLogin}
+        onSubmit={handleRegister}
         className="flex flex-col gap-4 relative w-full"
       >
+        <AppInput
+          type="text"
+          value={name}
+          onChange={setName}
+          placeholder="Nombre"
+          required
+        />
+        <AppInput
+          type="text"
+          value={phone}
+          onChange={setPhone}
+          placeholder="Teléfono"
+          required
+        />
         <AppInput
           type="email"
           value={email}
@@ -61,18 +75,18 @@ const LoginForm = () => {
           required
         />
 
-        <a
-          href="#"
-          className="text-xs mb-6 text-[#E89B4C]"
-        >
-          ¿Olvidaste la contraseña?
-        </a>
+        <AppCheckbox
+          label="Acepto los términos y condiciones"
+          checked={termsAccepted}
+          onChange={setTermsAccepted}
+          required
+        />
 
         <button
           type="submit"
           className="button"
         >
-          Iniciar sesión
+          Registrarse
         </button>
       </form>
       <div className="flex items-center my-2">
@@ -93,16 +107,16 @@ const LoginForm = () => {
       </button>
 
       <p className="text-center text-sm mt-6">
-        ¿No tienes cuenta?{' '}
-        <a
-          href="/register"
+        ¿Ya tienes una cuenta?{' '}
+        <Link
+          href="/login"
           className="text-[#E89B4C]"
         >
-          Crear una cuenta
-        </a>
+          Iniciar sesión
+        </Link>
       </p>
     </div>
   )
 }
 
-export default LoginForm
+export default RegisterForm

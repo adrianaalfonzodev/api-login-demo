@@ -7,20 +7,20 @@ const initialState = {
   error: null
 }
 
-const loginSlice = createSlice({
-  name: 'login',
+const authSlice = createSlice({
+  name: 'auth',
   initialState,
   reducers: {
-    loginStart(state) {
+    authStart(state) {
       state.loading = true
       state.error = null
     },
-    loginSuccess(state, action) {
+    authSuccess(state, action) {
       state.loading = false
       state.isLoggedIn = true
       state.user = action.payload
     },
-    loginFailure(state, action) {
+    authFailure(state, action) {
       state.loading = false
       state.error = action.payload
       state.isLoggedIn = false
@@ -38,7 +38,7 @@ const loginSlice = createSlice({
   }
 })
 
-export const { loginStart, loginSuccess, loginFailure, logout, clearError } =
-  loginSlice.actions
+export const { authStart, authSuccess, authFailure, logout, clearError } =
+  authSlice.actions
 
-export default loginSlice.reducer
+export default authSlice.reducer
